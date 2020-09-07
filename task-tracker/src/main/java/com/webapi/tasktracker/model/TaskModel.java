@@ -2,15 +2,25 @@ package com.webapi.tasktracker.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class TaskModel {
 
-	private long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 	private String username;
 	private String description;
 	private Date targetDate;
 	private boolean status;
 	private String priority;
 	
+	public TaskModel() {
+		System.out.println("In default constructor");
+	}
 	public TaskModel(long id, String username, String description, Date targetDate, boolean status, String priority) {
 		super();
 		this.id = id;
@@ -40,10 +50,10 @@ public class TaskModel {
 			return false;
 		return true;
 	}
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getUsername() {

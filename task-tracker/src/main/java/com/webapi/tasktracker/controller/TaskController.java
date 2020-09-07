@@ -17,7 +17,7 @@ import com.webapi.tasktracker.model.TaskModel;
 import com.webapi.tasktracker.service.TaskService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 public class TaskController {
 	@Autowired
 	private TaskService service;
@@ -32,22 +32,24 @@ public class TaskController {
 		return service.findById(id);
 	}
 	
-	@DeleteMapping("/users/{username}/tasks/{id}")
-	public ResponseEntity<Void> deleteTask(@PathVariable String username, @PathVariable long id){
-		TaskModel task =service.deleteById(id);
-		if(task != null) {
-			return ResponseEntity.noContent().build();
+	
+	 @DeleteMapping("/users/{username}/tasks/{id}") 
+	 public ResponseEntity<Void> deleteTask(@PathVariable String username, @PathVariable long id){ 
+		 TaskModel task =service.deleteTask(id); 
+		 if(task != null) {
+			 return ResponseEntity.noContent().build();
 		}
-		
-		return ResponseEntity.notFound().build();
-	}
+	    return ResponseEntity.notFound().build();
+	 }
+	
 	
 	@PutMapping("/users/{username}/tasks/{id}") 
 	public ResponseEntity<TaskModel> updateTask(
 			@PathVariable String username, 
 			@PathVariable long id, @RequestBody TaskModel task){
-			
-		TaskModel updatedTask = service.save(task);
+		
+		
+		TaskModel updatedTask = service.update(task,id);
 		return new ResponseEntity<TaskModel>(task,HttpStatus.OK);
 	}
 }

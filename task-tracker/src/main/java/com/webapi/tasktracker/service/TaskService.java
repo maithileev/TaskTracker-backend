@@ -1,18 +1,66 @@
-package com.webapi.tasktracker.service;
+package com.webapi.tasktracker.service; 
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webapi.tasktracker.model.TaskModel;
+import com.webapi.tasktracker.repository.TaskRepository;
 
 @Service
 public class TaskService {
+	@Autowired
+	TaskRepository repository;
+	
+	public  TaskModel save(TaskModel task) {
+		TaskModel t = repository.save(task);
+		return t;
+	}
+	
+	public List<TaskModel> findAll(){
+		return repository.findAll();
+	}
+	
+	public TaskModel findById(long id) {
+		TaskModel task = repository.findById(id).get();
+		return task;
+	}
 
-	private static List<TaskModel> tasks = new ArrayList<>();
-	private static int idCounter = 0;
+	public TaskModel update(TaskModel task, long id) {
+		TaskModel t = new TaskModel();
+		try {
+		t = repository.findById(id).get();
+		t.setDescription(task.getDescription());
+		t.setPriority(task.getPriority());
+		t.setStatus(task.isStatus());
+		t.setTargetDate(task.getTargetDate());
+		t = repository.save(t);
+		}
+		catch(NoSuchElementException e) {
+			t.setDescription(task.getDescription());
+			t.setPriority(task.getPriority());
+			t.setStatus(task.isStatus());
+			t.setTargetDate(task.getTargetDate());
+			t = repository.save(t);
+		}
+		return t;
+	}
+
+	public TaskModel deleteTask(long id) {
+		TaskModel task = repository.getOne(id);
+		repository.deleteById(id);
+		return task;
+	}
+	
+	
+}
+	
+	/*private static List<TaskModel> tasks = new ArrayList<>();
+	private static long idCounter = 0;
 	
 	static {
 		tasks.add(new TaskModel(++idCounter, "Maithilee", "Learn to Dance", new Date(), false, "Low"));
@@ -56,3 +104,4 @@ public class TaskService {
 		return null;
 	}
 }
+*/
